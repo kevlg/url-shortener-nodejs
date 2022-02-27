@@ -1,21 +1,14 @@
 import { Express } from "express";
+import { saveURL, getTopURLs, redirectToURL } from "./controllers/URLsController";
 
 const routes = (app: Express) => {
-    app.post('/url-shortener', (req, res) => {
-        
-    });
+    app.post('/url-shortener', saveURL);
 
     // 20 urls
-    app.get('/top-urls', (req, res) => {
-        res.json({
-            data: []
-        });
-    });
+    app.get('/top-urls', getTopURLs);
 
     // redirect to URL
-    app.get(/([0-9])+/, (req, res) => {
-        res.json({url: req.originalUrl});
-    });
+    app.get(/([0-9])+/, redirectToURL);
 };
 
 export default routes;
