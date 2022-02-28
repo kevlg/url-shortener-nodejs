@@ -6,8 +6,6 @@ import { connect } from "../models/connection";
 import { URLs } from "../models/urls";
 import { port, host } from "../utils";
 
-import type { URL } from "../types";
-
 
 export const saveURL = async (req: Request, res: Response) => {
     const URL: string = req.body.URL;
