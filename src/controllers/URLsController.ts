@@ -4,6 +4,10 @@ import { nanoid } from "nanoid";
 
 import { connect } from "../models/connection";
 import { URLs } from "../models/urls";
+import { port, host } from "../utils";
+
+import type { URL } from "../types";
+
 
 export const saveURL = async (req: Request, res: Response) => {
     const URL: string = req.body.URL;
@@ -20,14 +24,13 @@ export const saveURL = async (req: Request, res: Response) => {
                 data: URLExists.newURL
             });
         } else {
-            const host = process.env.EXPRESS_URL || "localhost";
             const shortcode = nanoid();
 
             const newURL = new URLs({
                 source: URL,
                 visits: 0,
                 shortcode,
-                newURL: `${host}\/${shortcode}`
+                newURL: `${host}:${port}\/${shortcode}`
             });
 
             await newURL.save();
@@ -52,8 +55,24 @@ export const getTopURLs = async (req: Request, res: Response) => {
     });
 };
 
-export const redirectToURL = (req: Request, res: Response) => {
-    res.json({
-        data: []
+export const redirectToURL = async (req: Request, res: Response) => {
+    let shortcode = req.url;
+    if (shortcode.length > 2) {
+        shortcode = shortcode.substring(1, shortcode.length);
+    }
+
+    await connect();
+
+    const redirectTo = await URLs.findOne({ shortcode });
+
+    if (redirectTo) {
+        const result = await redirectTo.updateOne({$inc: { visits: 1 }});
+        if (result.modifiedCount === 1) {
+            res.redirect(redirectTo.source);
+        }
+    } 
+
+    res.status(404).json({
+        message: "404 NOT FOUND"
     });
 };
