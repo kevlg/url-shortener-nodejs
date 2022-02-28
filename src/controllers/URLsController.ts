@@ -43,9 +43,12 @@ export const saveURL = async (req: Request, res: Response) => {
     }
 };
 
-export const getTopURLs = (req: Request, res: Response) => {
+export const getTopURLs = async (req: Request, res: Response) => {
+    await connect();
+    
+    const topURLs = await URLs.find({}).sort({ visits: 'desc' }).limit(20);
     res.json({
-        data: []
+        data: topURLs
     });
 };
 
