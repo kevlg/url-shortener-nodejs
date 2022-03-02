@@ -12,7 +12,6 @@ const generateToken = (user: string, password: string) => {
 export const login = (req: Request, res: Response) => {
     const { user, password } = req.body;
 	
-	console.log(user, password);
     const token = generateToken(user, password);
 	
     if (token.length > 1) {
