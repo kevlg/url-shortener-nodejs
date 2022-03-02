@@ -6,6 +6,9 @@ import { connect } from "../models/connection";
 import { URLs } from "../models/urls";
 import { port, host } from "../utils";
 
+function getProtocol(req: Request) {
+    return req.secure ? 'https' : 'http';
+}
 
 export const saveURL = async (req: Request, res: Response) => {
     const URL: string = req.body.URL;
@@ -23,12 +26,13 @@ export const saveURL = async (req: Request, res: Response) => {
             });
         } else {
             const shortcode = nanoid();
+            const internalURL = `${getProtocol(req)}://${host}:${port}\/${shortcode}`;
 
             const newURL = new URLs({
                 source: URL,
                 visits: 0,
                 shortcode,
-                newURL: `${host}:${port}\/${shortcode}`
+                newURL: internalURL
             });
 
             await newURL.save();
