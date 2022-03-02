@@ -70,7 +70,7 @@ export const redirectToURL = async (req: Request, res: Response) => {
     if (redirectTo) {
         const result = await redirectTo.updateOne({$inc: { visits: 1 }});
         if (result.modifiedCount === 1) {
-            res.redirect(redirectTo.source);
+            return res.redirect(redirectTo.source);
         }
     } 
 
