@@ -1,13 +1,14 @@
+import 'dotenv/config' 
 import express from "express";
 import routes from "./routes";
+import cors from "cors";
 
 import { port, host } from "./utils";
 import { authenticateToken } from "./controllers/AuthenticationMiddleware";
 
-
-require('dotenv').config();
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(authenticateToken);
 

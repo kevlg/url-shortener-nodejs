@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   	const nonSecurePaths = ['/login'];
     
-    if (nonSecurePaths.includes(req.path)) {
+	const regex = new RegExp(/([0-9])+/);
+	if (nonSecurePaths.includes(req.path) || regex.test(req.path)) {
       	return next();
     }
     
